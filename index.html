@@ -1,0 +1,548 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Masters Tournament Pool Leaderboard</title>
+  <link href="https://fonts.googleapis.com/css?family=Merriweather&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Merriweather', serif;
+      line-height: 1.6;
+      color: #333;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 20px;
+      background-color: #F5F3E8;
+    }
+    header {
+      background: url('header.jpg') no-repeat center center/cover; /* update with your image URL or GitHub path */
+      position: relative;
+      height: 250px;
+      text-align: center;
+      color: white;
+      margin-bottom: 20px;
+    }
+    header::before {
+      content: "";
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: rgba(2, 89, 40, 0.6);
+      z-index: 1;
+    }
+    header h1 {
+      position: relative;
+      z-index: 2;
+      margin: 0;
+      padding-top: 80px;
+      font-size: 2.5rem;
+    }
+    nav {
+      background-color: #fff;
+      border-bottom: 2px solid #025928;
+      margin-bottom: 20px;
+    }
+    nav ul {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+    }
+    nav li {
+      margin: 0 15px;
+    }
+    nav a {
+      text-decoration: none;
+      color: #025928;
+      font-weight: bold;
+      font-size: 16px;
+      padding: 10px;
+      display: block;
+    }
+    nav a.active {
+      border-bottom: 3px solid #025928;
+    }
+    .container {
+      background-color: white;
+      border-radius: 5px;
+      padding: 20px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      min-height: 300px;
+    }
+    /* Countdown Timer Styles */
+    #countdown-container {
+      text-align: center;
+      margin-bottom: 20px;
+      background-color: #e6f7e9;
+      padding: 15px;
+      border-radius: 5px;
+      font-size: 18px;
+      font-weight: bold;
+      color: #025928;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 20px;
+    }
+    th, td {
+      padding: 12px 15px;
+      text-align: left;
+      border-bottom: 1px solid #ddd;
+    }
+    th {
+      background-color: #025928;
+      color: white;
+      position: sticky;
+      top: 0;
+    }
+    tr:nth-child(even) {
+      background-color: #f2f2f2;
+    }
+    tr:hover {
+      background-color: #e6f7e9;
+    }
+    .loading {
+      text-align: center;
+      padding: 40px;
+      font-size: 18px;
+    }
+    .error {
+      color: red;
+      text-align: center;
+      padding: 20px;
+    }
+    .last-updated {
+      text-align: right;
+      font-size: 14px;
+      color: #666;
+      margin-top: 10px;
+    }
+    .score-under {
+      color: #025928;
+      font-weight: bold;
+    }
+    .score-over {
+      color: #a30000;
+    }
+    .score-even {
+      color: #000;
+    }
+    /* Hide all tab content by default */
+    .tab-content {
+      display: none;
+    }
+    /* Show active tab content */
+    .tab-content.active {
+      display: block;
+    }
+    .group-preview {
+      display: inline-block;
+      padding: 4px 8px;
+      margin-right: 5px;
+      border-radius: 4px;
+      color: white;
+      font-size: 0.9rem;
+    }
+    
+    /* Example colors for each group */
+    .group-1 { background-color: #28a745; } /* green */
+    .group-2 { background-color: #007bff; } /* blue */
+    .group-3 { background-color: #dc3545; } /* red */
+    .group-4 { background-color: #fd7e14; } /* orange */
+    .group-5 { background-color: #6f42c1; } /* purple */
+    .group-6 { background-color: #20c997; } /* teal */
+    .group-7 { background-color: #ffc107; } /* yellow */
+    .group-8 { background-color: #17a2b8; } /* cyan */
+    /* Responsive styles */
+    @media (max-width: 600px) {
+      header {
+        height: 150px;
+      }
+      header h1 {
+        font-size: 1.8rem;
+        padding-top: 40px;
+      }
+      nav ul {
+        flex-direction: column;
+        align-items: center;
+      }
+      nav li {
+        margin: 10px 0;
+      }
+      .container {
+        padding: 10px;
+      }
+      iframe {
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Masters Tournament Pool</h1>
+  </header>
+  
+  <!-- Navigation Menu -->
+  <nav>
+    <ul>
+      <li><a href="#" class="nav-link active" data-tab="home">Standings</a></li>
+      <li><a href="#" class="nav-link" data-tab="leaderboard">Leaderboard</a></li>
+      <li><a href="#" class="nav-link" data-tab="rules">Rules</a></li>
+      <li><a href="#" class="nav-link" data-tab="entry">Enter</a></li>
+    </ul>
+  </nav>
+  
+  <div class="container">
+    <!-- Home Tab (Standings) -->
+    <div id="home" class="tab-content active">
+      <!-- Countdown Timer -->
+      <div id="countdown-container">
+        Picks lock in: <span id="countdown-timer">Loading...</span>
+      </div>
+      <p>Welcome back to the 2025 Masters Pool!</p>
+      <p>
+        Check back here for live standings after the tournament begins.<br><br>
+        Congrats to last year's winners!<br>
+        1st Place...Ryan McKenzie<br>
+        2nd Place...Wes Upchurch<br>
+        3rd Place...Mike Walton
+      </p>
+      <!-- Selections Table -->
+      <div id="selections-container">
+        <h2>Entries</h2>
+        <div id="selections-content">
+          <div class="loading">Loading selections data...</div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Leaderboard Tab -->
+    <div id="leaderboard" class="tab-content">
+      <h2>Live Masters Tournament Leaderboard</h2>
+      <p class="last-updated">Last updated: <span id="update-time">--</span></p>
+      <div id="lb-content">
+        <div class="loading">Loading leaderboard data...</div>
+      </div>
+    </div>
+    
+    <!-- Rules Tab -->
+    <div id="rules" class="tab-content">
+      <h2>Masters Madness Pool 2025</h2>
+      <p>Welcome back to the (now) inaugural Masters Fantasy Golf Tournament!</p>
+      <h2>Why Your Participation Matters</h2>
+      <p>We’re running the pool back in the same format as last year, where 1st, 2nd and 3rd place will get a set amount and the rest will go to someone in our community who could use a little support. This year, we’ve got a really meaningful opportunity. One of our staff members, Liana McCain, just lost her father a few weeks ago. She and her sister have been carrying the full financial weight of the funeral arrangements while also grieving his loss. There may be some estate funds down the line, but for now, they’ve had to cover everything themselves, and it’s been a heavy burden. Someone suggested we rally around them and make this year’s pool about helping Liana and her family. We think it’s a beautiful idea and hope you all are in.</p>
+      <h2>How It Works</h2>
+      <p><strong>The Tournament Structure:</strong></p>
+      <ul>
+        <li><strong>Selection:</strong> Select 1 golfer from each of the 9 groups.</li>
+        <li><strong>Scoring:</strong> Your team’s scores are aggregated. The scores of your 4 lowest-scoring golfers count towards your total.</li>
+        <li><strong>The Challenge:</strong> If more than 4 of your golfers miss the cut, your team will automatically count the score required to make the weekend cut as a replacement score.
+          <br>(For example, if only 3 of your players make the cut, your team’s 4th score will be filled with the score necessary to make the weekend cut.)</li>
+      </ul>
+      <p><strong>Making Your Picks:</strong></p>
+      <p>Select your team from 9 groups based on performance potential. Each group was created based on odds to win the tournament. Selections can be made at the bottom of the page (Max 2 entries per participant). You will receive an email confirmation acknowledging your picks and can change them at any time up until the deadline.</p>
+      <p><strong>Entry Submission:</strong></p>
+      <ul>
+        <li><strong>Deadline:</strong> ~5am MT, Thursday, April 10th.</li>
+        <li><strong>Entry Fee:</strong> $100 per team, with a maximum of two teams per participant.</li>
+        <li><strong>Payment Methods:</strong> Venmo (@Drake-Fages) or alternative arrangements via contact with Drake @ 951-818-7517.</li>
+      </ul>
+      <p><strong>Payouts and Prizes</strong></p>
+      <ul>
+        <li>Total Prize Money: $1,500.</li>
+        <li>1st Place: $1,000</li>
+        <li>2nd Place: $400</li>
+        <li>3rd Place: $100</li>
+      </ul>
+      <p>Prize money will be awarded directly to winners. Tiebreakers are in place to ensure fairness and competition!</p>
+      <p><strong>Extend the Invitation</strong></p>
+      <p>We encourage you to share this pool with friends and family!</p>
+      <p>Just share this link: <a href="http://mastersmadness.com" target="_blank">mastersmadness.com</a></p>
+      <p><strong>Thank You</strong></p>
+      <p>Your participation means more than just competing in a fantasy golf tournament; it represents an amazing opportunity to support a deserving family in our community. Thank you for joining us in this meaningful cause.</p>
+    </div>
+    
+    <!-- Enter Tab -->
+    <div id="entry" class="tab-content">
+      <h2>Enter the Pool</h2>
+      <div style="text-align: center;">
+        <iframe 
+          src="https://docs.google.com/forms/d/e/1FAIpQLSeSywG8muoLG9dAqFn2_uJLDzxU62xVySBJFdaVHvCR4MVk9A/viewform?embedded=true" 
+          width="640" 
+          height="4100"
+          frameborder="0" 
+          marginheight="0" 
+          marginwidth="0"
+          style="display: block; margin: auto;">
+          Loading…
+        </iframe>
+      </div>
+    </div>
+  </div>
+  
+  <script>
+    // Navigation: switch between tabs
+    document.querySelectorAll('.nav-link').forEach(link => {
+      link.addEventListener('click', function(e) {
+        e.preventDefault();
+        // Remove active class from all links and hide all tab content
+        document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
+        document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
+        
+        // Add active class to clicked link and show the corresponding tab
+        this.classList.add('active');
+        const tabId = this.getAttribute('data-tab');
+        document.getElementById(tabId).classList.add('active');
+        
+        // If the Leaderboard tab is activated, refresh its data.
+        if (tabId === 'leaderboard') {
+          fetchLeaderboardData();
+        }
+        // If the Home tab is activated, load the selections data.
+        if (tabId === 'home') {
+          fetchSelectionsData();
+        }
+      });
+    });
+    
+    // Google Sheets API details
+    const SHEET_ID = '1afQSwPf_mbhGe7J906pj0p8gP9Pon1FQedoQJp6hBp4';
+    const API_KEY = 'AIzaSyDcMK1A-dAl44BU48eCcg0QeqTlqDZw1uk';
+    // Tab names for different datasets
+    const LEADERBOARD_TAB_NAME = '2025 Leaderboard';
+    const SELECTIONS_TAB_NAME = '2025 selections';
+    
+    // Function to fetch Leaderboard data from Google Sheets
+    async function fetchLeaderboardData() {
+      try {
+        const response = await fetch(
+          `https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values/${LEADERBOARD_TAB_NAME}?key=${API_KEY}`
+        );
+        if (!response.ok) {
+          throw new Error('Failed to fetch leaderboard data');
+        }
+        const data = await response.json();
+        displayLeaderboard(data.values);
+        updateLastUpdated();
+      } catch (error) {
+        console.error('Error fetching leaderboard data:', error);
+        document.getElementById('lb-content').innerHTML =
+          '<div class="error">Error loading leaderboard data. Please try again later.</div>';
+      }
+    }
+    
+    // Function to display the Leaderboard.
+    // Extract columns: POS (B, index 1), PLAYER (D, index 3), SCORE (E, index 4)
+    function displayLeaderboard(data) {
+      if (!data || data.length < 2) {
+        document.getElementById('lb-content').innerHTML =
+          '<div class="error">No data available or invalid data format.</div>';
+        return;
+      }
+    
+      const rows = data.slice(1);
+      let tableHTML = `
+        <table>
+          <thead>
+            <tr>
+              <th>POS</th>
+              <th>PLAYER</th>
+              <th>SCORE</th>
+              <th>TODAY</th>
+              <th>THRU</th>
+            </tr>
+          </thead>
+          <tbody>`;
+    
+      rows.forEach(row => {
+        if (row.length < 7) return;
+        const pos = row[1] || "";
+        const player = row[2] || ""; //switch this back to '3' when tournament starts
+        const score = row[4] || "";
+        const today = row[5] || "";
+        const thru = row[6] || "";
+    
+        let scoreClass = "score-even";
+        if (score === "E") {
+          scoreClass = "score-even";
+        } else {
+          const numericScore = Number(score);
+          if (!isNaN(numericScore)) {
+            if (numericScore < 0) {
+              scoreClass = "score-under";
+            } else if (numericScore > 0) {
+              scoreClass = "score-over";
+            }
+          }
+        }
+    
+        tableHTML += `
+          <tr>
+            <td>${pos}</td>
+            <td>${player}</td>
+            <td class="${scoreClass}">${score}</td>
+            <td>${today}</td>
+            <td>${thru}</td>
+          </tr>`;
+      });
+    
+      tableHTML += `
+          </tbody>
+        </table>`;
+    
+      document.getElementById('lb-content').innerHTML = tableHTML;
+    }
+
+    
+    // Function to fetch Selections data from Google Sheets
+    async function fetchSelectionsData() {
+      try {
+        const response = await fetch(
+          `https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values/${SELECTIONS_TAB_NAME}?key=${API_KEY}`
+        );
+        if (!response.ok) {
+          throw new Error('Failed to fetch selections data');
+        }
+        const data = await response.json();
+        displaySelections(data.values);
+      } catch (error) {
+        console.error('Error fetching selections data:', error);
+        document.getElementById('selections-content').innerHTML =
+          '<div class="error">Error loading selections data. Please try again later.</div>';
+      }
+    }
+        
+    function displaySelections(data) {
+      if (!data || data.length < 2) {
+        document.getElementById('selections-content').innerHTML =
+          '<div class="error">No selections data available or invalid data format.</div>';
+        return;
+      }
+      
+      // Define your tournament start date.
+      const tournamentStartDate = new Date("April 10, 2025 06:00:00");
+      const tournamentStarted = new Date().getTime() >= tournamentStartDate.getTime();
+      
+      let html = '';
+      // Loop over each entry (skip header row)
+      data.slice(1).forEach(row => {
+        // Check if there are enough columns.
+        if (row.length < 21) return;
+        
+        const submitterName = row[2] || ''; // Full name from the "Name" column
+        const overallScore = row[3] || '';
+        
+        if (!tournamentStarted) {
+          // Before the tournament starts, only show the name and overall score.
+          html += `
+            <div style="margin-bottom: 10px; border: 1px solid #ddd; padding: 10px; border-radius: 4px;">
+              <div style="display: flex; align-items: center;">
+                <span style="flex-grow: 1; font-size: 1.1rem;">
+                  <strong>${submitterName}</strong> — Overall Score: ${overallScore}
+                </span>
+              </div>
+            </div>
+          `;
+        } else {
+          // Once the tournament starts, show the inline preview of top 4 selections and allow expansion.
+          let groups = [];
+          // For group i (1-indexed), group name is at index 5+(i-1)*2 and score at index 6+(i-1)*2.
+          for (let i = 1; i <= 8; i++) {
+            const groupName = row[5 + (i - 1) * 2] || '';
+            const groupScoreStr = row[6 + (i - 1) * 2] || '';
+            const groupScore = parseFloat(groupScoreStr);
+            groups.push({ group: i, name: groupName.trim(), score: isNaN(groupScore) ? Infinity : groupScore });
+          }
+          
+          groups = groups.filter(g => g.name !== '');
+          groups.sort((a, b) => a.score - b.score);
+          const topFour = groups.slice(0, 4);
+          
+          let previewHTML = '<div style="display: inline-block; margin-left: 10px;">';
+          topFour.forEach(g => {
+            // Display full group selection name and score in a colored rectangle.
+            previewHTML += `<span class="group-preview group-${g.group}" title="Group ${g.group}: ${g.name} (Score: ${g.score})">
+                              ${g.name} (${g.score === Infinity ? 'N/A' : g.score})
+                            </span>`;
+          });
+          previewHTML += '</div>';
+          
+          let groupDetails = '<ul>';
+          for (let i = 1; i <= 8; i++) {
+            const groupName = row[5 + (i - 1) * 2] || '';
+            const groupScore = row[6 + (i - 1) * 2] || '';
+            if (groupName.trim() !== '') {
+              groupDetails += `<li>Group ${i}: ${groupName} — Score: ${groupScore}</li>`;
+            }
+          }
+          groupDetails += '</ul>';
+          
+          html += `
+            <details style="margin-bottom: 10px; border: 1px solid #ddd; padding: 10px; border-radius: 4px;">
+              <summary style="cursor: pointer; font-size: 1.1rem; display: flex; align-items: center;">
+                <span style="flex-grow: 1;">
+                  <strong>${submitterName}</strong> — Overall Score: ${overallScore}
+                </span>
+                ${previewHTML}
+              </summary>
+              ${groupDetails}
+            </details>
+          `;
+        }
+      });
+      
+      document.getElementById('selections-content').innerHTML = html;
+    }
+
+    // Update the "last updated" timestamp.
+    function updateLastUpdated() {
+      const now = new Date();
+      const options = {
+        year: 'numeric',
+        month: 'short',
+        day: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit',
+        second: '2-digit'
+      };
+      document.getElementById('update-time').textContent = now.toLocaleString(undefined, options);
+    }
+    
+    // Countdown Timer Code
+    const picksLockDeadline = new Date("April 10, 2025 05:00:00").getTime();
+    function updateCountdown() {
+      const now = new Date().getTime();
+      const distance = picksLockDeadline - now;
+      if (distance < 0) {
+        document.getElementById("countdown-timer").innerHTML = "Picks are locked!";
+        clearInterval(countdownInterval);
+        return;
+      }
+      const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+      const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+      const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+      const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+      document.getElementById("countdown-timer").innerHTML = 
+        days + "d " + hours + "h " + minutes + "m " + seconds + "s ";
+    }
+    const countdownInterval = setInterval(updateCountdown, 1000);
+    updateCountdown();
+    
+    // Auto-refresh: Refresh Leaderboard data once per day (1440 minutes * 60 * 1000 ms)
+    setInterval(() => {
+      if (document.getElementById('leaderboard').classList.contains('active')) {
+        fetchLeaderboardData();
+      }
+    }, 1440 * 60 * 1000);
+    
+    // On initial load, if Home is active, fetch selections data.
+    if (document.getElementById('home').classList.contains('active')) {
+      fetchSelectionsData();
+    }
+  </script>
+</body>
+</html>
