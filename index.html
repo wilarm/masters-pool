@@ -313,12 +313,15 @@
     // Tab names for different datasets
     const LEADERBOARD_TAB_NAME = '2025 Leaderboard';
     const SELECTIONS_TAB_NAME = '2025 selections';
+    encoded_leaderboard = encodeURIComponent(LEADERBOARD_TAB_NAME);
+    encoded_selections = encodeURIComponent(SELECTIONS_TAB_NAME);
+
     
     // Function to fetch Leaderboard data from Google Sheets
     async function fetchLeaderboardData() {
       try {
         const response = await fetch(
-          `https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values/${LEADERBOARD_TAB_NAME}?key=${API_KEY}`
+          `https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values/${encoded_leaderboard}?key=${API_KEY}`
         );
         if (!response.ok) {
           throw new Error('Failed to fetch leaderboard data');
@@ -400,7 +403,7 @@
     async function fetchSelectionsData() {
       try {
         const response = await fetch(
-          `https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values/${SELECTIONS_TAB_NAME}?key=${API_KEY}`
+          `https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values/${encoded_selections}?key=${API_KEY}`
         );
         if (!response.ok) {
           throw new Error('Failed to fetch selections data');
