@@ -353,8 +353,8 @@
               <th>POS</th>
               <th>PLAYER</th>
               <th>SCORE</th>
-              // <th>TODAY</th> //turn these back on
-              // <th>THRU</th> //turn these back on
+              <th>TODAY</th>
+              <th>THRU</th>
             </tr>
           </thead>
           <tbody>`;
@@ -364,8 +364,8 @@
         const pos = row[1] || "";
         const player = row[2] || ""; //switch this back to '3' when tournament starts
         const score = row[3] || "";
-        //const today = row[5] || ""; //turn these back on when tournament starts
-        //const thru = row[6] || "";
+        const today = row[5] || ""; //turn these back on when tournament starts
+        const thru = row[6] || "";
     
         let scoreClass = "score-even";
         if (score === "E") {
