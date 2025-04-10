@@ -362,9 +362,9 @@
       rows.forEach(row => {
         if (row.length < 7) return;
         const pos = row[1] || "";
-        const player = row[2] || ""; //switch this back to '3' when tournament starts
+        const player = row[3] || ""; //switch this back to '3' when tournament starts
         const score = row[3] || "";
-        const today = row[5] || ""; //turn these back on when tournament starts
+        const today = row[5] || "";
         const thru = row[6] || "";
     
         let scoreClass = "score-even";
@@ -425,7 +425,7 @@
       }
       
       // Define your tournament start date.
-      const tournamentStartDate = new Date("April 10, 2025 06:00:00");
+      const tournamentStartDate = new Date("April 10, 2025 05:00:00");
       const tournamentStarted = new Date().getTime() >= tournamentStartDate.getTime();
       
       let html = '';
@@ -451,7 +451,7 @@
         } else {
           // Once the tournament starts, show the inline preview of top 4 selections and allow expansion.
           let groups = [];
-          // For group i (1-indexed), group name is at index 5+(i-1)*2 and score at index 6+(i-1)*2.
+            or group i (1-indexed), group name is at index 5+(i-1)*2 and score at index 6+(i-1)*2.
           for (let i = 1; i <= 8; i++) {
             const groupName = row[5 + (i - 1) * 2] || '';
             const groupScoreStr = row[6 + (i - 1) * 2] || '';
