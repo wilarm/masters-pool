@@ -363,10 +363,10 @@
       rows.forEach(row => {
         if (row.length < 7) return;
         const pos = row[1] || "";
-        const player = row[2] || ""; //switch this back to '3' when tournament starts
-        const score = row[3] || "";
-        const today = row[4] || "";
-        const thru = row[5] || "";
+        const player = row[3] || ""; //switch this back to '3' when tournament starts
+        const score = row[4] || "";
+        const today = row[5] || "";
+        const thru = row[6] || "";
     
         let scoreClass = "score-even";
         if (score === "E") {
@@ -437,6 +437,7 @@
         
         const submitterName = row[2] || ''; // Full name from the "Name" column
         const overallScore = row[3] || '';
+        const place = row[4] || '';
         
         if (!tournamentStarted) {
           // Before the tournament starts, only show the name and overall score.
@@ -444,7 +445,7 @@
             <div style="margin-bottom: 10px; border: 1px solid #ddd; padding: 10px; border-radius: 4px;">
               <div style="display: flex; align-items: center;">
                 <span style="flex-grow: 1; font-size: 1.1rem;">
-                  <strong>${submitterName}</strong> — ${overallScore}
+                  Place: ${place} | <strong>${submitterName}</strong> — Score: ${overallScore}
                 </span>
               </div>
             </div>
@@ -487,7 +488,7 @@
             <details style="margin-bottom: 10px; border: 1px solid #ddd; padding: 10px; border-radius: 4px;">
               <summary style="cursor: pointer; font-size: 1.1rem; display: flex; align-items: center;">
                 <span style="flex-grow: 1;">
-                  <strong>${submitterName}</strong> — Overall Score: ${overallScore}
+                  Place: ${place} | <strong>${submitterName}</strong> — Score: ${overallScore}
                 </span>
                 ${previewHTML}
               </summary>
